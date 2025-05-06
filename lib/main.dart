@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF1F1D42),
           primary: const Color(0xFF1F1D42),
-          secondary: const Color(0xFFB388FF),
+          secondary: const Color(0xFF8459FC),
         ),
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
         scaffoldBackgroundColor: const Color(0xFFF5F5F8),

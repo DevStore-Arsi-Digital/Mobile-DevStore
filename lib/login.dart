@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'home.dart';
 import 'signup.dart';
 import 'forgotpassword.dart';
+import 'navigation.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -29,20 +32,50 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  void _login() {
-    if (_formKey.currentState!.validate()) {
-      // In a real app, you would implement actual authentication here
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+  void _login() async {
+  if (_formKey.currentState!.validate()) {
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+
+    // Kirim POST request ke API 
+    try {
+      var response = await http.post(
+        Uri.parse('https://dev-store.upylon.com/api/login'),
+        body: {
+          'email': email,
+          'password': password,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Jika login berhasil
+        print('Login berhasil: ${response.body}');
+        // Bisa navigate ke HomeScreen kalau mau
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => NavigationPage()),
+        );
+      } else {
+        // Kalau gagal
+        print('Login gagal: ${response.body}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login gagal!')),
+        );
+      }
+    } catch (e) {
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Terjadi kesalahan.')),
       );
     }
   }
+}
+
 
   void _loginWithGoogle() {
     // Implement Google Sign-In
     // For now, just navigate to home screen
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const HomeScreen()),
+      MaterialPageRoute(builder: (_) => HomeScreen()),
     );
   }
 
