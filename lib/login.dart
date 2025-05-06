@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'home.dart';
 import 'signup.dart';
 import 'forgotpassword.dart';
 import 'navigation.dart';
@@ -75,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
     // Implement Google Sign-In
     // For now, just navigate to home screen
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => HomeScreen()),
+      MaterialPageRoute(builder: (_) => NavigationPage()),
     );
   }
 
