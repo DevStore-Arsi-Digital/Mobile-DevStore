@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'login.dart';
 import 'navigation.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -41,16 +44,72 @@ class _SignupScreenState extends State<SignupScreen> {
     });
   }
 
-  void _signUp() {
-    if (_formKey.currentState!.validate()) {
-      // In a real app, you would implement actual registration here
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const LoginScreen()),
+  void _signUp() async {
+  if (_formKey.currentState!.validate()) {
+    final name = _nameController.text.trim();
+    final noHp = _noHpController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    try {
+      var response = await http.post(
+        Uri.parse('https://dev-store.upylon.com/api/register'),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json', // Menggunakan JSON
+        },
+        body: jsonEncode({
+          'name': name,
+          'no_telp': noHp,
+          'email': email,
+          'password': password,
+        }),
+      );
+
+      print('Status: ${response.statusCode}');
+      print('Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print('API Response: $data');
+
+        // Periksa status di dalam meta
+        if (data['meta']['status'] == 'success') {
+          // Menampilkan notifikasi sukses
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Registrasi berhasil')),
+          );
+
+          // Menunggu beberapa detik untuk menampilkan SnackBar
+          await Future.delayed(Duration(seconds: 2));
+
+          // Navigasi ke halaman login dan menghapus halaman sebelumnya
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginScreen()),
+            (route) => false, // Menghapus semua halaman sebelumnya
+          );
+        } else {
+          // Menampilkan pesan error dari API
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(data['meta']['message'] ?? 'Registrasi gagal')),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Server error: ${response.statusCode}')),
+        );
+      }
+    } catch (e) {
+      print('Exception: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Terjadi kesalahan jaringan')),
       );
     }
   }
+}
 
-  void _signUpWithGoogle() {
+    void _signUpWithGoogle() {
     // Implement Google Sign-In
     // For now, just navigate to home screen
     Navigator.of(context).pushReplacement(
