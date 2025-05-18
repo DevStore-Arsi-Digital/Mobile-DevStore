@@ -61,8 +61,6 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 16),
                 _buildHeader(),
                 const SizedBox(height: 16),
-                _buildSearchBar(),
-                const SizedBox(height: 16),
                 _buildBanner(),
                 const SizedBox(height: 16),
                 _buildCategoryRow(),
@@ -85,38 +83,75 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: const [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  return Container(
+    width: double.infinity,
+    padding: const EdgeInsets.fromLTRB(16, 12, 16, 16), // << diperkecil padding bawah dan atas
+    decoration: const BoxDecoration(
+      color: Color(0xFF8459FC),
+      borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Hey There...",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            Text("Lets buy something in here",
-                style: TextStyle(color: Colors.grey)),
+            const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Hey There...",
+                  style: TextStyle(
+                    fontSize: 16, // << diperkecil font
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 2),
+                Text(
+                  "Lets buy something in here",
+                  style: TextStyle(color: Colors.white70, fontSize: 12),
+                ),
+              ],
+            ),
+            Row(
+              children: const [
+                CircleAvatar(
+                  backgroundColor: Colors.white24,
+                  radius: 16,
+                  child: Icon(Icons.person_outline, color: Colors.white, size: 18),
+                ),
+                SizedBox(width: 8),
+                CircleAvatar(
+                  backgroundColor: Colors.white24,
+                  radius: 16,
+                  child: Icon(Icons.chat_bubble_outline, color: Colors.white, size: 18),
+                ),
+              ],
+            ),
           ],
         ),
-        Icon(Icons.chat_bubble_outline, color: Colors.white),
-      ],
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return TextField(
-      decoration: InputDecoration(
-        hintText: 'Search',
-        prefixIcon: const Icon(Icons.search),
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(vertical: 0),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide.none,
+        const SizedBox(height: 12), // << juga dikecilin
+        SizedBox(
+          height: 38, // << dikecilin dikit dari default
+          child: TextField(
+            decoration: InputDecoration(
+              hintText: 'Search',
+              prefixIcon: const Icon(Icons.search),
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(24),
+                borderSide: BorderSide.none,
+              ),
+            ),
+          ),
         ),
-      ),
-    );
-  }
+      ],
+    ),
+  );
+}
 
   Widget _buildBanner() {
     return SizedBox(
